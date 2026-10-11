@@ -244,7 +244,7 @@ class AnnotationCreation extends Component {
           updateGeometry={this.updateGeometry}
           windowId={windowId}
         />
-        <form onSubmit={this.submitForm}>
+        <form onSubmit={this.submitForm} className={classes.section}>
           <Grid container>
             <Grid item xs={12}>
               <Typography variant="overline">
@@ -379,12 +379,15 @@ class AnnotationCreation extends Component {
         >
           <Paper>
             <ClickAwayListener onClickAway={this.handleCloseLineWeight}>
-              <MenuList>
+              <MenuList autoFocus role="listbox">
                 {[1, 3, 5, 10, 50].map((option, index) => (
                   <MenuItem
                     key={option}
                     onClick={this.handleLineWeightSelect}
                     value={option}
+                    selected={option == strokeWidth}
+                    role="option"
+                    aria-selected={option == strokeWidth}
                   >
                     {option}
                   </MenuItem>
@@ -428,6 +431,12 @@ const styles = (theme) => ({
     display: 'flex',
     flexWrap: 'wrap',
   },
+  section: {
+    paddingBottom: theme.spacing(1),
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(1),
+    paddingTop: theme.spacing(2),
+  },
 });
 
 AnnotationCreation.propTypes = {
@@ -440,7 +449,11 @@ AnnotationCreation.propTypes = {
   config: PropTypes.shape({
     annotation: PropTypes.shape({
       adapter: PropTypes.func,
-      defaults: PropTypes.objectOf(PropTypes.string),
+      defaults: PropTypes.objectOf(
+        PropTypes.oneOfType(
+          [PropTypes.bool, PropTypes.func, PropTypes.number, PropTypes.string]
+        )
+      ),
     }),
   }).isRequired,
   id: PropTypes.string.isRequired,
